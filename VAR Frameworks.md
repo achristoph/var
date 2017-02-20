@@ -228,10 +228,48 @@ this.setState({
 });
 ```
 
+###HTTP Service
+V: Vue has no built-in HTTP library. The popular HTTP library is vue-resource. It supports Promise API, URI Templates, interceptors. It also has friendly RESTful methods 
+
+```javascript
+//GET /someUrl
+this.$http.get('/someUrl').then(response => {
+    // get body data
+    this.someData = response.body;
+  }, response => {
+    // error callback
+  });
+// POST someItem/1
+  resource.save({id: 1}, {item: this.item}).then(response => {
+    // success callback
+  }, response => {
+    // error callback
+  });
+```
+
+A: Angular has a built-in HTTP library that is implemented with RxJs, thus the default return is Observable object
+
+```javascript
+constructor(private http: Http) { }
+
+  getHeroes(): Promise<Hero[]> {
+    return this.http.get(this.heroesUrl)
+               .toPromise()
+               .then(response => response.json().data as Hero[])
+               .catch(this.handleError);
+  }
+
+```
+
+R: 
+
+```javascript
+	
+```
+
 ###Event Passing
 Parent Child Communication
 Angular: emit
 React: props
 Vue: props, emit. eventBus (centralized code)
 
-###Service
