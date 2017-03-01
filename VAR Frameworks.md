@@ -168,10 +168,10 @@ export class AppModule {
 
 ```
 
-R: Has controlled component concept
+R: Has controlled component concept. 
 
 ```javascript
-console.log('a')
+
 ```
 
 ####Event Handling
@@ -247,7 +247,7 @@ this.$http.get('/someUrl').then(response => {
   });
 ```
 
-A: Angular has a built-in HTTP library that is implemented with RxJs, thus the default return is Observable object
+A: Angular has a built-in HTTP library that is implemented with RxJs, the default return value is Observable object
 
 ```javascript
 constructor(private http: Http) { }
@@ -260,16 +260,124 @@ constructor(private http: Http) { }
   }
 
 ```
+R: React has no built-in HTTP library. The are many HTTP libraries to use like Axios, Fetch 
 
-R: 
+
+###Component Interaction
+A: Angular has both prop-like mechanism for parent-child communication and event emitter
 
 ```javascript
-	
+@Component({
+  selector: 'hero-child',
+  template: `
+    <h3>{{hero.name}} says:</h3>
+    <p>I, {{hero.name}}, am at your service, {{masterName}}.</p>
+  `
+})
+export class HeroChildComponent {
+  @Input() hero: Hero;
+  @Input('master') masterName: string;
+}
+
+@Component({
+  selector: 'hero-parent',
+  template: `
+    <h2>{{master}} controls {{heroes.length}} heroes</h2>
+    <hero-child *ngFor="let hero of heroes"
+      [hero]="hero"
+      [master]="master">
+    </hero-child>
+  `
+})
+export class HeroParentComponent {
+  heroes = HEROES;
+  master: string = 'Master';
+}
+
+```
+R: React only uses props mechanism parent to child 
+
+```javascript
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+
+const element = <Welcome name="Sara" />;
+ReactDOM.render(
+  element,
+  document.getElementById('root')
+);
 ```
 
-###Event Passing
-Parent Child Communication
-Angular: emit
-React: props
-Vue: props, emit. eventBus (centralized code)
+V: Vue has both props and event emitter mechanism:
+
+```javascript
+Vue.component('child', {
+  // declare the props
+  props: ['message'],
+  // just like data, the prop can be used inside templates
+  // and is also made available in the vm as this.message
+  template: '<span>{{ message }}</span>'
+})
+<child message="hello!"></child>
+
+```
+
+#Change Detection
+A: Angular Change Detection is done using NgZone( based on Zone.JS) where it provides an execution context for asynchronous operation
+
+```javascript
+ObservableWrapper.subscribe(this.zone.onTurnDone, () => {
+  this.zone.run(() => {
+    this.tick();
+  });
+});
+
+tick() {
+  // perform change detection
+  this.changeDetectorRefs.forEach((detector) => {
+    detector.detectChanges();
+  });
+}
+```
+
+R: React uses virtual DOM in its change detection. When a component’s state changes, it triggers the re-render of the entire component sub-tree, starting at that component as root. To avoid unnecessary re-renders of child components, you need to implement shouldComponentUpdate everywhere and use immutable data structures
+
+V: component’s dependencies are automatically tracked during its render, so the system knows precisely which components actually need to re-render
+
+`![Vue Change Detection](vue_cd.png)
+
+###Form
+V:
+
+```javascript
+
+```
+A:
+
+```javascript
+
+```
+R:
+
+```javascript
+
+```
+
+#Pipes
+V:
+
+```javascript
+
+```
+A:
+
+```javascript
+
+```
+R:
+
+```javascript
+
+```
 

@@ -23,7 +23,7 @@
       <footer class="footer" v-show="todos.length" v-cloak>
         <span class="todo-count">
           <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
-        </span>
+        </span> 
         <ul class="filters">
           <li><a href="#/all" :class="{ selected: visibility == 'all' }" @click="show('all')">All</a></li>
           <li><a href="#/active" :class="{ selected: visibility == 'active' }" @click="show('active')">Active</a></li>
@@ -82,7 +82,7 @@
         todos: todoStorage.fetch(),
         newTodo: '',
         editedTodo: null,
-        visibility: 'completed'
+        visibility: 'all'
       }
     },
     // watch todos change for localStorage persistence
