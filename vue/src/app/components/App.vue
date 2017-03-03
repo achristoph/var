@@ -3,7 +3,7 @@
     <section class="todoapp">
       <header class="header">
         <h1 style="color:seagreen">Todos</h1>
-        <img src="../assets/logo.png" height="100" width="100" style="position:absolute;top:-109px;margin-left: 40px">
+        <img src="src/assets/images/vue-logo.png" height="100" width="100" style="position:absolute;top:-109px;margin-left: 40px">
         <input class="new-todo" autofocus autocomplete="off" placeholder="What needs to be done?" v-model="newTodo" @keyup.enter="addTodo">
       </header>
       <section class="main" v-show="todos.length" v-cloak>
@@ -25,9 +25,11 @@
           <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
         </span>
         <ul class="filters">
-          <li><a href="#/all" :class="{ selected: visibility == 'all' }" @click="show('all')">All</a></li>
-          <li><a href="#/active" :class="{ selected: visibility == 'active' }" @click="show('active')">Active</a></li>
-          <li><a href="#/completed" :class="{ selected: visibility == 'completed' }" @click="show('completed')">Completed</a></li>
+          <router-link to="/all">All</router-link>
+          <router-link to="/completed">Completed</router-link>
+          <li><a href="/all" :class="{ selected: $route.params.id == 'all' }">All</a></li>
+          <li><a href="/active" :class="{ selected: $route.params.id == 'active' }">Active</a></li>
+          <li><a href="/completed" :class="{ selected: $route.params.id == 'completed' }">Completed</a></li>
         </ul>
         <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
       Clear completed
@@ -45,31 +47,31 @@
   var STORAGE_KEY = 'todos-vuejs-2.0'
 
   var todoStorage = {
-    fetch: function() {
+    fetch: function () {
       var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-      todos.forEach(function(todo, index) {
+      todos.forEach(function (todo, index) {
         todo.id = index
       })
       todoStorage.uid = todos.length
       return todos
     },
-    save: function(todos) {
+    save: function (todos) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
     }
   }
 
   // visibility filters
   var filters = {
-    all: function(todos) {
+    all: function (todos) {
       return todos
     },
-    active: function(todos) {
-      return todos.filter(function(todo) {
+    active: function (todos) {
+      return todos.filter(function (todo) {
         return !todo.completed
       })
     },
-    completed: function(todos) {
-      return todos.filter(function(todo) {
+    completed: function (todos) {
+      return todos.filter(function (todo) {
         return todo.completed
       })
     }
@@ -88,40 +90,43 @@
     // watch todos change for localStorage persistence
     watch: {
       todos: {
-        handler: function(todos) {
+        handler: function (todos) {
           todoStorage.save(todos)
         },
         deep: true
+      },
+      '$route'(to, from) {
+        console.log(to,from);
       }
     },
     // computed properties
     computed: {
-      filteredTodos: function() {
+      filteredTodos: function () {
         return filters[this.visibility](this.todos)
       },
-      remaining: function() {
+      remaining: function () {
         return filters.active(this.todos).length
       },
       allDone: {
-        get: function() {
+        get: function () {
           return this.remaining === 0
         },
-        set: function(value) {
-          this.todos.forEach(function(todo) {
+        set: function (value) {
+          this.todos.forEach(function (todo) {
             todo.completed = value
           })
         }
       }
     },
     filters: {
-      pluralize: function(n) {
+      pluralize: function (n) {
         return n === 1 ? 'item' : 'items'
       }
     },
     // methods that implement data logic.
     // note there's no DOM manipulation here at all.
     methods: {
-      addTodo: function() {
+      addTodo: function () {
         var value = this.newTodo && this.newTodo.trim()
         if (!value) {
           return
@@ -133,14 +138,14 @@
         })
         this.newTodo = ''
       },
-      removeTodo: function(todo) {
+      removeTodo: function (todo) {
         this.todos.splice(this.todos.indexOf(todo), 1)
       },
-      editTodo: function(todo) {
+      editTodo: function (todo) {
         this.beforeEditCache = todo.title
         this.editedTodo = todo
       },
-      doneEdit: function(todo) {
+      doneEdit: function (todo) {
         if (!this.editedTodo) {
           return
         }
@@ -150,19 +155,19 @@
           this.removeTodo(todo)
         }
       },
-      cancelEdit: function(todo) {
+      cancelEdit: function (todo) {
         this.editedTodo = null
         todo.title = this.beforeEditCache
       },
-      removeCompleted: function() {
+      removeCompleted: function () {
         this.todos = filters.active(this.todos)
       },
-      show: function(v) {
-        this.visibility = v;
+      show: function (v) {
+        this.visibility = $route.params.id;
       }
     },
     directives: {
-      'todo-focus': function(el, value) {
+      'todo-focus': function (el, value) {
         if (value) {
           el.focus()
         }

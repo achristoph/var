@@ -1,20 +1,24 @@
-var webpack = require('webpack')
+var webpackMerge = require('webpack-merge');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var commonConfig = require('./webpack.common.js');
+var helpers = require('./helpers');
 
-module.exports = {
-    entry: {
-        app: 'src/app.ts',
-        vendor: 'src/vendor.ts'
-    },
-    output: {
-        filename: '[name].js'
-    },
-    rules: [{
-            test: /\.ts$/,
-            loader: 'awesome-typescript-loader'
-        },
-        {
-            test: /\.css$/,
-            loaders: 'style-loader!css-loader'
-        }
-    ]
-}
+module.exports = webpackMerge(commonConfig, {
+  devtool: 'cheap-module-eval-source-map',
+
+  output: {
+    path: helpers.root('dist'),
+    publicPath: 'http://localhost:8080/',
+    filename: '[name].js',
+    chunkFilename: '[id].chunk.js'
+  },
+
+  plugins: [
+    new ExtractTextPlugin('[name].css')
+  ],
+
+  devServer: {
+    historyApiFallback: true,
+    stats: 'minimal'
+  }
+});
