@@ -25,11 +25,9 @@
           <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
         </span>
         <ul class="filters">
-          <router-link to="/all">All</router-link>
-          <router-link to="/completed">Completed</router-link>
-          <li><a href="/all" :class="{ selected: $route.params.id == 'all' }">All</a></li>
-          <li><a href="/active" :class="{ selected: $route.params.id == 'active' }">Active</a></li>
-          <li><a href="/completed" :class="{ selected: $route.params.id == 'completed' }">Completed</a></li>
+          <li><a href="/all" :class="{ selected: visibility == 'all' }">All</a></li>
+          <li><a href="/active" :class="{ selected: visibility == 'active' }">Active</a></li>
+          <li><a href="/completed" :class="{ selected: visibility == 'completed' }">Completed</a></li>
         </ul>
         <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
       Clear completed
@@ -47,31 +45,31 @@
   var STORAGE_KEY = 'todos-vuejs-2.0'
 
   var todoStorage = {
-    fetch: function () {
+    fetch: function() {
       var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-      todos.forEach(function (todo, index) {
+      todos.forEach(function(todo, index) {
         todo.id = index
       })
       todoStorage.uid = todos.length
       return todos
     },
-    save: function (todos) {
+    save: function(todos) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
     }
   }
 
   // visibility filters
   var filters = {
-    all: function (todos) {
+    all: function(todos) {
       return todos
     },
-    active: function (todos) {
-      return todos.filter(function (todo) {
+    active: function(todos) {
+      return todos.filter(function(todo) {
         return !todo.completed
       })
     },
-    completed: function (todos) {
-      return todos.filter(function (todo) {
+    completed: function(todos) {
+      return todos.filter(function(todo) {
         return todo.completed
       })
     }
@@ -79,6 +77,9 @@
 
   var app = {
     name: 'app',
+    created() {
+      this.visibility = window.location.pathname.replace(/\//, '')
+    },
     data() {
       return {
         todos: todoStorage.fetch(),
@@ -90,43 +91,43 @@
     // watch todos change for localStorage persistence
     watch: {
       todos: {
-        handler: function (todos) {
+        handler: function(todos) {
           todoStorage.save(todos)
         },
         deep: true
       },
       '$route'(to, from) {
-        console.log(to,from);
+        console.log(to, from);
       }
     },
     // computed properties
     computed: {
-      filteredTodos: function () {
+      filteredTodos: function() {
         return filters[this.visibility](this.todos)
       },
-      remaining: function () {
+      remaining: function() {
         return filters.active(this.todos).length
       },
       allDone: {
-        get: function () {
+        get: function() {
           return this.remaining === 0
         },
-        set: function (value) {
-          this.todos.forEach(function (todo) {
+        set: function(value) {
+          this.todos.forEach(function(todo) {
             todo.completed = value
           })
         }
       }
     },
     filters: {
-      pluralize: function (n) {
+      pluralize: function(n) {
         return n === 1 ? 'item' : 'items'
       }
     },
     // methods that implement data logic.
     // note there's no DOM manipulation here at all.
     methods: {
-      addTodo: function () {
+      addTodo: function() {
         var value = this.newTodo && this.newTodo.trim()
         if (!value) {
           return
@@ -138,14 +139,14 @@
         })
         this.newTodo = ''
       },
-      removeTodo: function (todo) {
+      removeTodo: function(todo) {
         this.todos.splice(this.todos.indexOf(todo), 1)
       },
-      editTodo: function (todo) {
+      editTodo: function(todo) {
         this.beforeEditCache = todo.title
         this.editedTodo = todo
       },
-      doneEdit: function (todo) {
+      doneEdit: function(todo) {
         if (!this.editedTodo) {
           return
         }
@@ -155,19 +156,19 @@
           this.removeTodo(todo)
         }
       },
-      cancelEdit: function (todo) {
+      cancelEdit: function(todo) {
         this.editedTodo = null
         todo.title = this.beforeEditCache
       },
-      removeCompleted: function () {
+      removeCompleted: function() {
         this.todos = filters.active(this.todos)
       },
-      show: function (v) {
+      show: function(v) {
         this.visibility = $route.params.id;
       }
     },
     directives: {
-      'todo-focus': function (el, value) {
+      'todo-focus': function(el, value) {
         if (value) {
           el.focus()
         }

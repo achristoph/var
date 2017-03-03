@@ -23,11 +23,14 @@
     <footer class="footer" *ngIf="todoStore.todos.length > 0">
       <span class="todo-count"><strong>{{todoStore.getRemaining().length}}</strong> {{todoStore.getRemaining().length == 1 ? 'item' : 'items'}} left</span>
       <ul class="filters">
-          <li><a href="#/all" >All</a></li>
-          <li><a href="#/active">Active</a></li>
-          <li><a href="#/completed">Completed</a></li>
-        </ul>
+        <li><a href="/all">All</a></li>
+        <li><a href="/active">Active</a></li>
+        <li><a href="/completed">Completed</a></li>
+      </ul>
       <button class="clear-completed" *ngIf="todoStore.getCompleted().length > 0" (click)="removeCompleted()">Clear completed</button>
     </footer>
   </section>
+  <footer class="info" style="font-size:larger">
+    Double-click to edit a todo
+  </footer>
 </main>

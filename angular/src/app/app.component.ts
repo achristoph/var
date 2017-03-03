@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import {TodoStore, Todo} from './services/store';
+import { TodoStore, Todo } from './services/store';
 import '../assets/css/styles.css';
 
 @Component({
-  selector: 'todo-app',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+	selector: 'app',
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.css']
 })
 
 export class AppComponent {
@@ -48,7 +48,7 @@ export class AppComponent {
 		this.todoStore.toggleCompletion(todo);
 	}
 
-	remove(todo: Todo){
+	remove(todo: Todo) {
 		this.todoStore.remove(todo);
 	}
 
