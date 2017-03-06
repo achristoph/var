@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TodoStore, Todo } from './services/store';
 import '../assets/css/styles.css';
 
@@ -8,10 +8,15 @@ import '../assets/css/styles.css';
 	styleUrls: ['./app.component.css']
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
 	todoStore: TodoStore;
 	newTodoText = '';
+	visibility = 'all';
 
+	ngOnInit() {
+		let path = window.location.pathname.replace(/\//, '');
+		this.visibility = path ? path : 'all'
+	}
 	constructor(todoStore: TodoStore) {
 		this.todoStore = todoStore;
 	}
