@@ -4,7 +4,7 @@
       <header class="header">
         <h1 style="color:seagreen">Todos</h1>
         <img src="src/assets/images/vue-logo.png" height="100" width="100" style="position:absolute;top:-109px;margin-left: 40px">
-        <input class="new-todo" autofocus autocomplete="off" placeholder="What needs to be done?" v-model="newTodo" @keyup.enter="addTodo">
+        <input class="new-todo" placeholder="What needs to be done?" autofocus v-model="newTodo" @keyup.enter="addTodo">
       </header>
       <section class="main" v-show="todos.length" v-cloak>
         <input class="toggle-all" type="checkbox" v-model="allDone">
@@ -24,10 +24,17 @@
         <span class="todo-count">
           <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
         </span>
+        <button @click="showTime">Click</button> {{time}}
         <ul class="filters">
-          <li><router-link to="/all" :class="{ selected: visibility == 'all' }">All</router-link></li>
-          <li><router-link to="/active" :class="{ selected: visibility == 'active' }">Active</router-link></li>
-          <li><router-link to="/completed" :class="{ selected: visibility == 'completed' }">Completed</router-link></li>
+          <li>
+            <router-link to="/all" :class="{ selected: visibility == 'all' }">All</router-link>
+          </li>
+          <li>
+            <router-link to="/active" :class="{ selected: visibility == 'active' }">Active</router-link>
+          </li>
+          <li>
+            <router-link to="/completed" :class="{ selected: visibility == 'completed' }">Completed</router-link>
+          </li>
         </ul>
         <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
       Clear completed
@@ -45,31 +52,31 @@
   var STORAGE_KEY = 'todos-vuejs-2.0'
 
   var todoStorage = {
-    fetch: function () {
+    fetch: function() {
       var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-      todos.forEach(function (todo, index) {
+      todos.forEach(function(todo, index) {
         todo.id = index
       })
       todoStorage.uid = todos.length
       return todos
     },
-    save: function (todos) {
+    save: function(todos) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
     }
   }
-  
+
   // visibility filters
   var filters = {
-    all: function (todos) {
+    all: function(todos) {
       return todos
     },
-    active: function (todos) {
-      return todos.filter(function (todo) {
+    active: function(todos) {
+      return todos.filter(function(todo) {
         return !todo.completed
       })
     },
-    completed: function (todos) {
-      return todos.filter(function (todo) {
+    completed: function(todos) {
+      return todos.filter(function(todo) {
         return todo.completed
       })
     }
@@ -80,55 +87,63 @@
     created() { // handle window reload for route filtering
       let path = window.location.pathname.replace(/\//, '');
       this.visibility = path ? path : 'all'
+      setInterval(function() {
+        this.time = "xx";
+      }, 1000)
     },
     data() {
       return {
         todos: todoStorage.fetch(),
         newTodo: '',
         editedTodo: null,
-        visibility: 'all'
+        visibility: 'all',
+        time: '1'
       }
     },
     // watch todos change for localStorage persistence
     watch: {
       todos: {
-        handler: function (todos) {
+        handler: function(todos) {
           todoStorage.save(todos)
         },
         deep: true
       },
       '$route'(to, from) {
         this.visibility = to.path.replace(/\//, '');
+      },
+      showTime: function() {
+        this.time = Date.now();
       }
     },
     // computed properties
     computed: {
-      filteredTodos: function () {
+      filteredTodos: function() {
         return filters[this.visibility](this.todos)
       },
-      remaining: function () {
+      remaining: function() {
         return filters.active(this.todos).length
       },
       allDone: {
-        get: function () {
-          return this.remaining === 0
+        get: function() {
+          return true;
+          // return this.remaining === 0
         },
-        set: function (value) {
-          this.todos.forEach(function (todo) {
+        set: function(value) {
+          this.todos.forEach(function(todo) {
             todo.completed = value
           })
         }
       }
     },
     filters: {
-      pluralize: function (n) {
+      pluralize: function(n) {
         return n === 1 ? 'item' : 'items'
       }
     },
     // methods that implement data logic.
     // note there's no DOM manipulation here at all.
     methods: {
-      addTodo: function () {
+      addTodo: function() {
         var value = this.newTodo && this.newTodo.trim()
         if (!value) {
           return
@@ -140,14 +155,14 @@
         })
         this.newTodo = ''
       },
-      removeTodo: function (todo) {
+      removeTodo: function(todo) {
         this.todos.splice(this.todos.indexOf(todo), 1)
       },
-      editTodo: function (todo) {
+      editTodo: function(todo) {
         this.beforeEditCache = todo.title
         this.editedTodo = todo
       },
-      doneEdit: function (todo) {
+      doneEdit: function(todo) {
         if (!this.editedTodo) {
           return
         }
@@ -157,19 +172,19 @@
           this.removeTodo(todo)
         }
       },
-      cancelEdit: function (todo) {
+      cancelEdit: function(todo) {
         this.editedTodo = null
         todo.title = this.beforeEditCache
       },
-      removeCompleted: function () {
+      removeCompleted: function() {
         this.todos = filters.active(this.todos)
       },
-      show: function (v) {
+      show: function(v) {
         this.visibility = $route.params.id;
       }
     },
     directives: {
-      'todo-focus': function (el, value) {
+      'todo-focus': function(el, value) {
         if (value) {
           el.focus()
         }

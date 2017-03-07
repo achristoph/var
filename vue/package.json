@@ -1,11 +1,10 @@
 {
-  "name": "vuejs",
-  "description": "A Vue.js project",
+  "name": "vue-todo",
+  "description": "A Vue Todo Project",
   "version": "1.0.0",
   "author": "Arthur Christoph <achristoph@gmail.com>",
-  "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack-dev-server --hot",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --hot --inline --progress",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
@@ -19,7 +18,7 @@
     "cross-env": "^3.0.0",
     "css-loader": "^0.25.0",
     "file-loader": "^0.9.0",
-    "vue-loader": "^11.0.0",
+    "vue-loader": "^11.1.4",
     "vue-template-compiler": "^2.2.1",
     "webpack": "^2.2.0",
     "webpack-dev-server": "^2.2.0"

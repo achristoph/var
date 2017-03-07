@@ -9,11 +9,25 @@ import { ActivatedRoute, Params } from '@angular/router';
 	styleUrls: ['./app.component.css']
 })
 
-
 export class AppComponent implements OnInit {
 	todoStore: TodoStore;
 	newTodoText = '';
 	visibility = 'all';
+	filters = {
+		all: function (todos: Array<Todo>) {
+			return todos
+		},
+		active: function (todos: Array<Todo>) {
+			return todos.filter(function (todo) {
+				return !todo.completed
+			})
+		},
+		completed: function (todos: Array<Todo>) {
+			return todos.filter(function (todo) {
+				return todo.completed
+			})
+		}
+	}
 
 	constructor(todoStore: TodoStore, private route: ActivatedRoute) {
 		this.todoStore = todoStore;

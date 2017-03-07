@@ -1,13 +1,13 @@
 {
-  "name": "angular2-webpack",
+  "name": "angular2-todo",
+  "description": "An Angular Todo Project",
   "version": "1.0.0",
-  "description": "A webpack starter for Angular",
+  "author": "Arthur Christoph <achristoph@gmail.com>",
   "scripts": {
     "start": "webpack-dev-server --inline --progress",
     "test": "karma start",
     "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail"
   },
-  "license": "MIT",
   "dependencies": {
     "@angular/common": "~2.4.0",
     "@angular/compiler": "~2.4.0",
@@ -44,7 +44,7 @@
     "style-loader": "^0.13.1",
     "typescript": "^2.2.1",
     "webpack": "2.2.0",
-    "webpack-dev-server": "2.2.0-rc.0",
+    "webpack-dev-server": "^2.2.0",
     "webpack-merge": "^2.4.0"
   }
 }
