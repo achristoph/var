@@ -1,24 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { TodoStore, Todo } from './services/store';
 import '../assets/css/styles.css';
+import 'rxjs/add/operator/switchMap';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
-	selector: 'app',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
+
 
 export class AppComponent implements OnInit {
 	todoStore: TodoStore;
 	newTodoText = '';
 	visibility = 'all';
 
-	ngOnInit() {
-		let path = window.location.pathname.replace(/\//, '');
-		this.visibility = path ? path : 'all'
-	}
-	constructor(todoStore: TodoStore) {
+	constructor(todoStore: TodoStore, private route: ActivatedRoute) {
 		this.todoStore = todoStore;
+	}
+
+	ngOnInit() {
+		// let path = window.location.pathname.replace(/\//, '');
+		// this.visibility = path ? path : 'all'
+		this.route.params.subscribe((params: Params) => this.visibility = params['id']);
 	}
 
 	stopEditing(todo: Todo, editedTitle: string) {

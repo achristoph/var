@@ -77,4 +77,20 @@ export class TodoStore {
 		this.todos.push(new Todo(title));
 		this.updateStore();
 	}
+
+	allTodos(){
+		return this.todos;
+	}
+
+	activeTodos(){
+		return this.todos.filter(function(todo){
+			return !todo.completed;
+		});
+	}
+
+	completedTodos(){
+		return this.todos.filter(function(todo){
+			return todo.completed;
+		});
+	}
 }

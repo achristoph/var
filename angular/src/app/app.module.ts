@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule }  from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { RootComponent } from './root.component';
 import { AppComponent } from './app.component';
 import { TodoStore } from './services/store';
 import { RouterModule, Routes } from '@angular/router';
@@ -8,14 +9,25 @@ import { RouterModule, Routes } from '@angular/router';
 @NgModule({
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    RouterModule.forRoot([
+       {
+        path: '',
+        component: AppComponent
+      },
+      {
+        path: ':id',
+        component: AppComponent
+      }
+    ])
   ],
   declarations: [
-    AppComponent
+    AppComponent,
+    RootComponent
   ],
   providers: [
     TodoStore
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [ RootComponent ]
 })
 export class AppModule { }

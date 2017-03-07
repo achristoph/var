@@ -57,7 +57,7 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
     }
   }
-
+  
   // visibility filters
   var filters = {
     all: function (todos) {
