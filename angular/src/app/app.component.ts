@@ -3,6 +3,7 @@ import { TodoStore, Todo } from './services/store';
 import '../assets/css/styles.css';
 import 'rxjs/add/operator/switchMap';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	templateUrl: './app.component.html',
@@ -13,30 +14,34 @@ export class AppComponent implements OnInit {
 	todoStore: TodoStore;
 	newTodoText = '';
 	visibility = 'all';
-	filters = {
-		all: function (todos: Array<Todo>) {
-			return todos
-		},
-		active: function (todos: Array<Todo>) {
-			return todos.filter(function (todo) {
-				return !todo.completed
-			})
-		},
-		completed: function (todos: Array<Todo>) {
-			return todos.filter(function (todo) {
-				return todo.completed
-			})
+	filters: any;
+	filteredTodos: any;
+	
+	constructor(todoStore: TodoStore, private route: ActivatedRoute) {
+		this.todoStore = todoStore;
+		this.filters = {
+			all: function (todos: Array<Todo>) {
+				return todos
+			},
+			active: function (todos: Array<Todo>) {
+				return todos.filter(function (todo) {
+					return !todo.completed
+				})
+			},
+			completed: function (todos: Array<Todo>) {
+				return todos.filter(function (todo) {
+					return todo.completed
+				})
+			}
 		}
 	}
 
-	constructor(todoStore: TodoStore, private route: ActivatedRoute) {
-		this.todoStore = todoStore;
-	}
-
 	ngOnInit() {
-		// let path = window.location.pathname.replace(/\//, '');
-		// this.visibility = path ? path : 'all'
-		this.route.params.subscribe((params: Params) => this.visibility = params['id']);
+		const url: Observable<string> = this.route.url.map(segments => segments.join(''));
+		url.subscribe((p) => {
+			this.visibility = p ? p : 'all';
+			this.filteredTodos = this.filters[this.visibility](this.todoStore.todos);
+		});
 	}
 
 	stopEditing(todo: Todo, editedTitle: string) {

@@ -24,17 +24,10 @@
         <span class="todo-count">
           <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
         </span>
-        <button @click="showTime">Click</button> {{time}}
         <ul class="filters">
-          <li>
-            <router-link to="/all" :class="{ selected: visibility == 'all' }">All</router-link>
-          </li>
-          <li>
-            <router-link to="/active" :class="{ selected: visibility == 'active' }">Active</router-link>
-          </li>
-          <li>
-            <router-link to="/completed" :class="{ selected: visibility == 'completed' }">Completed</router-link>
-          </li>
+          <li><router-link to="/all" :class="{ selected: visibility == 'all' }">All</router-link></li>
+          <li><router-link to="/active" :class="{ selected: visibility == 'active' }">Active</router-link></li>
+          <li><router-link to="/completed" :class="{ selected: visibility == 'completed' }">Completed</router-link></li>
         </ul>
         <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
       Clear completed
@@ -96,8 +89,7 @@
         todos: todoStorage.fetch(),
         newTodo: '',
         editedTodo: null,
-        visibility: 'all',
-        time: '1'
+        visibility: 'all'
       }
     },
     // watch todos change for localStorage persistence
@@ -179,9 +171,6 @@
       removeCompleted: function() {
         this.todos = filters.active(this.todos)
       },
-      show: function(v) {
-        this.visibility = $route.params.id;
-      }
     },
     directives: {
       'todo-focus': function(el, value) {
